@@ -1,11 +1,13 @@
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 CREATE OR REPLACE FUNCTION generate_searchable(_nome VARCHAR, _apelido VARCHAR, _stack JSON)
-    RETURNS TEXT AS $$
+    RETURNS TEXT AS $$ -- $$: delimitador usado para envolver o corpo do código da função, pode ser substituído por qualquer outro delimitador válido
     BEGIN
-    RETURN _nome || _apelido || _stack;
+        RETURN _nome || _apelido || _stack; -- operador de concatenação em PostgreSQL, JSON é automaticamente convertido em string
     END;
-$$ LANGUAGE plpgsql IMMUTABLE;
+$$ LANGUAGE plpgsql IMMUTABLE; 
+-- PL/pgSQL: linguagem procedural do PostgreSQL
+-- IMMUTABLE: Para os mesmos valores de entrada, ela sempre retorna o mesmo resultado.
 
 CREATE TABLE IF NOT EXISTS pessoas (
     id uuid DEFAULT gen_random_uuid() UNIQUE NOT NULL,
@@ -13,9 +15,10 @@ CREATE TABLE IF NOT EXISTS pessoas (
     nome TEXT NOT NULL,
     nascimento DATE NOT NULL,
     stack JSON,
-    searchable text GENERATED ALWAYS AS (generate_searchable(nome, apelido, stack)) STORED
+    searchable text GENERATED ALWAYS AS (generate_searchable(nome, apelido, stack)) STORED -- ao invés de cálculo sob demanda
 );
 
+-- Esquema: Agrupa objetos dentro de um banco de dados.
 CREATE INDEX IF NOT EXISTS idx_pessoas_searchable ON public.pessoas USING gist (searchable public.gist_trgm_ops (siglen='64'));
 
 CREATE UNIQUE INDEX IF NOT EXISTS pessoas_apelido_index ON public.pessoas USING btree (apelido);

@@ -1,20 +1,18 @@
-package com.example.rinha.Pessoas;
+package com.example.rinha.Pessoa;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
+import com.example.rinha.Pessoa.DTO.PessoaDTO;
+
 @Entity
 @Table(name = "pessoas", schema = "public") 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Pessoa {
 
     @Id
@@ -37,5 +35,15 @@ public class Pessoa {
     @Column(name = "searchable", insertable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Indica que a coluna é gerada automaticamente pelo banco de dados
     private String searchable;
+
+    public Pessoa(PessoaDTO pessoaDTO) { 
+        this.apelido = pessoaDTO.apelido;
+        this.nome = pessoaDTO.nome;
+        this.nascimento = pessoaDTO.nascimento;
+
+        if (pessoaDTO.stack.isPresent()) { 
+            this.stack = pessoaDTO.stack.get().toString();
+        }
+    }
 }
 

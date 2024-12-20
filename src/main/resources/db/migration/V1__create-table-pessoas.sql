@@ -10,7 +10,7 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 -- IMMUTABLE: Para os mesmos valores de entrada, ela sempre retorna o mesmo resultado.
 
 CREATE TABLE IF NOT EXISTS pessoas (
-    id uuid DEFAULT gen_random_uuid() UNIQUE NOT NULL,
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     apelido TEXT UNIQUE NOT NULL,
     nome TEXT NOT NULL,
     nascimento DATE NOT NULL,

@@ -1,13 +1,66 @@
 package com.example.rinha;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import java.net.URI;
+import java.util.List;
 
-@SpringBootTest
-class RinhaApplicationTests {
+import org.junit.jupiter.api.Test;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import com.example.rinha.Pessoa.Pessoa;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+
+class RinhaApplicationTests extends PessoaTestBase { 
+	@Test
+	public void shouldGetPessoaById() { 
+		ResponseEntity<Void> createdResponse = restTemplate.postForEntity("/pessoas", validPessoaRequestPayload(), Void.class);
+		URI location = createdResponse.getHeaders().getLocation();
+        ResponseEntity<Pessoa> getResponse = restTemplate.getForEntity(location, Pessoa.class);
+        
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getResponse.getBody()).isNotNull();
+	}
+
+	@SuppressWarnings("null")
+	@Test
+	public void shouldFindPessoaByTerm() { 
+		restTemplate.postForEntity("/pessoas", validPessoaRequestPayload(), Void.class);
+        ResponseEntity<List<Pessoa>> response = restTemplate.exchange(
+            "/pessoas?t=Teste",
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<Pessoa>>() {}
+        );
+        
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody()).hasSizeGreaterThan(0);
+        assertThat(response.getBody().get(0).getNome()).contains("Teste");
+	}
 
 	@Test
-	void contextLoads() {
+	public void shouldNotFindPessoaByTerm() { 
+		ResponseEntity<List<Pessoa>> response = restTemplate.exchange(
+			"/pessoas?t=Teste2",
+			HttpMethod.GET,
+			null,
+			new ParameterizedTypeReference<List<Pessoa>>() {}
+		);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(response.getBody()).isNotNull();
+		assertThat(response.getBody()).hasSize(0);
+	}
+
+	@Test
+	public void shouldNotFindPessoaById() { 
+		ResponseEntity<?> response = restTemplate.getForEntity("/pessoas/00000000-0000-0000-0000-000000000000", Void.class);
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 	}
 
 }

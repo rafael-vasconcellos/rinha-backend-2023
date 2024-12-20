@@ -7,10 +7,16 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import com.example.rinha.Pessoa.DTO.PessoaDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @Entity
-@Table(name = "pessoas", schema = "public") 
+@Table(name = "pessoas", schema = "public")
 @Getter
 @Setter
 public class Pessoa {
@@ -29,6 +35,7 @@ public class Pessoa {
     @Column(name = "nascimento", nullable = false)
     private LocalDate nascimento;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "stack", columnDefinition = "json")
     private String stack;
 
@@ -40,8 +47,13 @@ public class Pessoa {
         this.nome = pessoaDTO.nome;
         this.nascimento = pessoaDTO.nascimento;
 
-        if (pessoaDTO.stack != null) { 
-            this.stack = pessoaDTO.stack.toString();
+        if (pessoaDTO.stack != null && !pessoaDTO.stack.isEmpty()) { 
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                this.stack = objectMapper.writeValueAsString(pessoaDTO.stack);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

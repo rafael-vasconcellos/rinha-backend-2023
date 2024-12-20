@@ -1,4 +1,4 @@
-GET http://localhost:8080/pessoas?t=marco HTTP/1.1
+GET http://localhost:8080/pessoas?t=Polo HTTP/1.1
 
 ###
 POST http://localhost:8080/pessoas HTTP/1.1

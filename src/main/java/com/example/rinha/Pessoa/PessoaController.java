@@ -42,7 +42,7 @@ public class PessoaController {
     @GetMapping("/pessoas/{id}")
     public ResponseEntity<?> getPessoa(@PathVariable UUID id) { 
         Optional<?> pessoa = this.pessoaService.get(id);
-        if (pessoa.isPresent()) { return ResponseEntity.ok().build(); }
+        if (pessoa.isPresent()) { return ResponseEntity.ok(pessoa.get()); }
         return ResponseEntity.notFound().build();
     }
 

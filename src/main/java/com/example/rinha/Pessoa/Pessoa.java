@@ -1,7 +1,9 @@
 package com.example.rinha.Pessoa;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -19,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Table(name = "pessoas", schema = "public")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Pessoa {
 
     @Id

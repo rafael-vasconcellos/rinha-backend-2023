@@ -33,7 +33,6 @@ public class Pessoa {
     private String stack;
 
     @Column(name = "searchable", insertable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Indica que a coluna é gerada automaticamente pelo banco de dados
     private String searchable;
 
     public Pessoa(PessoaDTO pessoaDTO) { 
@@ -41,8 +40,8 @@ public class Pessoa {
         this.nome = pessoaDTO.nome;
         this.nascimento = pessoaDTO.nascimento;
 
-        if (pessoaDTO.stack.isPresent()) { 
-            this.stack = pessoaDTO.stack.get().toString();
+        if (pessoaDTO.stack != null) { 
+            this.stack = pessoaDTO.stack.toString();
         }
     }
 }

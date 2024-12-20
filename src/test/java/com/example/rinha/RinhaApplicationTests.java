@@ -1,26 +1,41 @@
 package com.example.rinha;
 
 import java.net.URI;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.example.rinha.Pessoa.Pessoa;
+import com.example.rinha.Pessoa.DTO.PessoaRequestPayload;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 class RinhaApplicationTests extends PessoaTestBase { 
 	@Test
 	public void shouldGetPessoaById() { 
-		ResponseEntity<Void> createdResponse = restTemplate.postForEntity("/pessoas", validPessoaRequestPayload(), Void.class);
+		ResponseEntity<Optional<?>> createdResponse = restTemplate.exchange(
+			"/pessoas",
+			HttpMethod.POST,
+			new HttpEntity<PessoaRequestPayload>(validPessoaRequestPayload()),
+			new ParameterizedTypeReference<Optional<?>>() {}
+		);
 		URI location = createdResponse.getHeaders().getLocation();
-        ResponseEntity<Pessoa> getResponse = restTemplate.getForEntity(location, Pessoa.class);
-        
+
+		if (location == null) { 
+			LocationHeaderNotSet<?> locationHeaderNotSet = new LocationHeaderNotSet<>("Location header not set", createdResponse.getHeaders().toString(), createdResponse.getStatusCode(), createdResponse.getBody().get());
+			fail(locationHeaderNotSet.toString());
+			return; 
+		}
+
+        ResponseEntity<Pessoa> getResponse = restTemplate.getForEntity(location.toString(), Pessoa.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(getResponse.getBody()).isNotNull();
 	}
@@ -29,11 +44,11 @@ class RinhaApplicationTests extends PessoaTestBase {
 	@Test
 	public void shouldFindPessoaByTerm() { 
 		restTemplate.postForEntity("/pessoas", validPessoaRequestPayload(), Void.class);
-        ResponseEntity<List<Pessoa>> response = restTemplate.exchange(
+        ResponseEntity<ArrayList<Pessoa>> response = restTemplate.exchange(
             "/pessoas?t=Teste",
             HttpMethod.GET,
             null,
-            new ParameterizedTypeReference<List<Pessoa>>() {}
+            new ParameterizedTypeReference<ArrayList<Pessoa>>() {}
         );
         
 
@@ -45,11 +60,11 @@ class RinhaApplicationTests extends PessoaTestBase {
 
 	@Test
 	public void shouldNotFindPessoaByTerm() { 
-		ResponseEntity<List<Pessoa>> response = restTemplate.exchange(
+		ResponseEntity<ArrayList<Pessoa>> response = restTemplate.exchange(
 			"/pessoas?t=Teste2",
 			HttpMethod.GET,
 			null,
-			new ParameterizedTypeReference<List<Pessoa>>() {}
+			new ParameterizedTypeReference<ArrayList<Pessoa>>() {}
 		);
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.rinha.Pessoa.DTO.PessoaQueryPayload;
 import com.example.rinha.Pessoa.DTO.PessoaRequestPayload;
 
 import jakarta.validation.ConstraintViolationException;
@@ -48,9 +47,9 @@ public class PessoaController {
     }
 
     @GetMapping("/pessoas")
-    public ResponseEntity<?> searchPessoa(@RequestParam PessoaQueryPayload query) { 
+    public ResponseEntity<?> searchPessoa(@RequestParam String t) { 
         Pageable pageable = PageRequest.of(0, 50);
-        Page<?> pagePessoas = this.pessoaService.search(query.t(), pageable);
+        Page<?> pagePessoas = this.pessoaService.search(t, pageable);
         ArrayList<?> pessoas = new ArrayList<>(pagePessoas.getContent());
         return ResponseEntity.ok(pessoas);
     }

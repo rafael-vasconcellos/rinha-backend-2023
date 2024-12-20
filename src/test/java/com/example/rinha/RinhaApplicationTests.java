@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RinhaApplicationTests extends PessoaTestBase { 
 	@Test
 	public void shouldGetPessoaById() { 
@@ -30,7 +32,7 @@ class RinhaApplicationTests extends PessoaTestBase {
 		URI location = createdResponse.getHeaders().getLocation();
 
 		if (location == null) { 
-			LocationHeaderNotSet<?> locationHeaderNotSet = new LocationHeaderNotSet<>("Location header not set", createdResponse.getHeaders().toString(), createdResponse.getStatusCode(), createdResponse.getBody().get());
+			LocationHeaderNotSet<?> locationHeaderNotSet = new LocationHeaderNotSet<>("Location header not set", createdResponse.getHeaders().toString(), createdResponse.getStatusCode(), createdResponse.getBody());
 			fail(locationHeaderNotSet.toString());
 			return; 
 		}
@@ -50,7 +52,7 @@ class RinhaApplicationTests extends PessoaTestBase {
             null,
             new ParameterizedTypeReference<ArrayList<Pessoa>>() {}
         );
-        
+
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();

@@ -2,14 +2,13 @@ package com.example.rinha;
 
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import com.example.rinha.Pessoa.PessoaRepository;
 import com.example.rinha.Pessoa.DTO.PessoaRequestPayload;
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
 public abstract class PessoaTestBase {
     @Autowired
     protected TestRestTemplate restTemplate;

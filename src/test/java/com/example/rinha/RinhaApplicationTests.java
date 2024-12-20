@@ -55,7 +55,7 @@ class RinhaApplicationTests extends PessoaTestBase {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody()).hasSizeGreaterThan(0);
-        assertThat(response.getBody().get(0).getNome()).contains("Teste");
+        assertThat(response.getBody().get(0).getNome()).contains("João");
 	}
 
 	@Test

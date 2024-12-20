@@ -31,7 +31,7 @@ public class PessoaService {
         return this.pessoaRepository.findById(id);
     }
     public Page<Pessoa> search(String query, Pageable pageable) { 
-        return this.pessoaRepository.findBySearchable(query, pageable);
+        return this.pessoaRepository.findAllBySearchableContaining(query, pageable);
     }
 
     public Long count() { return this.pessoaRepository.count(); }

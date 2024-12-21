@@ -5,7 +5,7 @@ services:
     hostname: app1
     environment:
       SERVER_PORT: 8080
-      DATABASE_URL: postgresql://localhost:5432/rinhadb
+      DATABASE_URL: postgresql://postgres:5432/rinhadb
       DATABASE_USERNAME: user
       DATABASE_PASSWORD: pass
       DB_POOL: 40

@@ -1,11 +1,14 @@
 package com.example.rinha.Pessoa.DTO;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.UUID;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.example.rinha.Pessoa.Exceptions.StackProcessingException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -13,6 +16,7 @@ import lombok.Getter;
 
 @Getter
 public class PessoaDTO { 
+    @NotEmpty
     private UUID id;
 
     @NotEmpty
@@ -27,17 +31,21 @@ public class PessoaDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate nascimento;
 
-    @Length(max = 32)
-    private ArrayList<String> stack;
+    private String stack;
 
     public PessoaDTO(PessoaRequestPayload pessoaRequestPayload) { 
-        //this.id = UUID.randomUUID();
+        this.id = UUID.randomUUID();
         this.nome = pessoaRequestPayload.nome;
         this.apelido = pessoaRequestPayload.apelido;
         this.nascimento = LocalDate.parse(pessoaRequestPayload.nascimento);
 
-        if (pessoaRequestPayload.stack.isPresent()) {
-            this.stack = pessoaRequestPayload.stack.get();
+        if (pessoaRequestPayload.stack != null && !pessoaRequestPayload.stack.isEmpty()) { 
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                this.stack = objectMapper.writeValueAsString(pessoaRequestPayload.stack);
+            } catch (JsonProcessingException e) {
+                throw new StackProcessingException("Error processing stack");
+            }
         }
     }
 }

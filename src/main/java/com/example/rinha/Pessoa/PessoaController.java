@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.rinha.Pessoa.DTO.PessoaDTO;
 import com.example.rinha.Pessoa.DTO.PessoaRequestPayload;
-
-import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -29,14 +29,14 @@ public class PessoaController {
     private PessoaService pessoaService;
 
     @PostMapping("/pessoas")
-    public ResponseEntity<?> createPessoa(@RequestBody PessoaRequestPayload pessoaRequestPayload) { 
+    public ResponseEntity<?> createPessoa(@RequestBody @Valid PessoaRequestPayload pessoaRequestPayload) { 
         try { 
-            var pessoa = this.pessoaService.create(pessoaRequestPayload); 
+            PessoaDTO pessoaDTO = new PessoaDTO(pessoaRequestPayload);
+            var pessoa = this.pessoaService.create(pessoaDTO);
             URI location = URI.create("/pessoas/" + pessoa.getId().toString());
             return ResponseEntity.created(location).build();
 
-        } catch (DateTimeParseException e) { return ResponseEntity.unprocessableEntity().build(); } 
-        catch (ConstraintViolationException e) { return ResponseEntity.unprocessableEntity().build(); }
+        } catch (DateTimeParseException e) { return ResponseEntity.unprocessableEntity().build(); }
     }
 
     @GetMapping("/pessoas/{id}")

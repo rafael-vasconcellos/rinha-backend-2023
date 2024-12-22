@@ -1,15 +1,16 @@
 package com.example.rinha.Pessoa.DTO;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.validation.constraints.Pattern;
 
 
 @Getter
@@ -26,10 +27,11 @@ public class PessoaRequestPayload {
     public String apelido;
 
     @NotEmpty
+    @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "Date must be in the format YYYY-MM-DD")
     public String nascimento;
 
-    @Length(max = 32)
-    public Optional<ArrayList<String>> stack;
+    @Size(max = 32)
+    public ArrayList<String> stack;
 
     public PessoaRequestPayload(String nome, String apelido, String nascimento) { 
         this.nome = nome;

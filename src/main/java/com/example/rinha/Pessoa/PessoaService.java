@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.rinha.Pessoa.DTO.PessoaDTO;
-import com.example.rinha.Pessoa.DTO.PessoaRequestPayload;
 
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
@@ -20,9 +19,9 @@ public class PessoaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
-    public Pessoa create(@Valid PessoaRequestPayload pessoaRequestPayload) 
+    public Pessoa create(@Valid PessoaDTO pessoaDTO) 
         throws DateTimeParseException, ConstraintViolationException { 
-            Pessoa pessoa = new Pessoa(new PessoaDTO(pessoaRequestPayload));
+            Pessoa pessoa = new Pessoa(pessoaDTO);
             this.pessoaRepository.save(pessoa);
             return pessoa;
     }

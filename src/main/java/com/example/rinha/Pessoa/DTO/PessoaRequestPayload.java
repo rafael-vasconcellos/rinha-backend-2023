@@ -1,6 +1,7 @@
 package com.example.rinha.Pessoa.DTO;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -28,7 +29,7 @@ public class PessoaRequestPayload {
     public String nascimento;
 
     @Length(max = 32)
-    public ArrayList<String> stack;
+    public Optional<ArrayList<String>> stack;
 
     public PessoaRequestPayload(String nome, String apelido, String nascimento) { 
         this.nome = nome;

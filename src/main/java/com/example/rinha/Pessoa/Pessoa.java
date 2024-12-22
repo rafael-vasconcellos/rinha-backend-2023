@@ -13,6 +13,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import com.example.rinha.Pessoa.DTO.PessoaDTO;
+import com.example.rinha.Pessoa.Exceptions.StackProcessingException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -47,18 +48,20 @@ public class Pessoa {
     private String searchable;
 
     public Pessoa(PessoaDTO pessoaDTO) { 
-        this.apelido = pessoaDTO.apelido;
-        this.nome = pessoaDTO.nome;
-        this.nascimento = pessoaDTO.nascimento;
+        this.apelido = pessoaDTO.getApelido();
+        this.nome = pessoaDTO.getNome();
+        this.nascimento = pessoaDTO.getNascimento();
 
-        if (pessoaDTO.stack != null && !pessoaDTO.stack.isEmpty()) { 
+        if (pessoaDTO.getId() != null) { this.id = pessoaDTO.getId(); }
+        if (pessoaDTO.getStack() != null && !pessoaDTO.getStack().isEmpty()) { 
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                this.stack = objectMapper.writeValueAsString(pessoaDTO.stack);
+                this.stack = objectMapper.writeValueAsString(pessoaDTO.getStack());
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
+                throw new StackProcessingException("Error processing stack");
             }
         }
     }
+
 }
 

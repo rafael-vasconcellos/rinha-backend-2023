@@ -7,21 +7,16 @@ services:
       DATABASE_URL: postgresql://postgres:5432/rinhadb
       DATABASE_USERNAME: user
       DATABASE_PASSWORD: pass
-      DB_POOL: 100
+      DB_POOL: 80
       # REQ_TIMEOUT: "2000"
     expose:
       - "8080"
     depends_on:
       - postgres
-    ulimits:
-      nproc: 1000000
-      nofile:
-        soft: 1000000
-        hard: 1000000
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: '0.45'
           memory: '0.6GB'
 
   app2:
@@ -43,8 +38,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.4'
-          memory: '1.5GB'
+          cpus: '0.35'
+          memory: '1.3GB'
     
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]

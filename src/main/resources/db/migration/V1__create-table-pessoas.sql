@@ -19,6 +19,6 @@ CREATE TABLE IF NOT EXISTS pessoas (
 );
 
 -- Esquema: agrupa objetos dentro de um banco de dados.
-CREATE INDEX IF NOT EXISTS idx_pessoas_searchable ON pessoas USING gin (searchable gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_pessoas_searchable ON public.pessoas USING gist (searchable public.gist_trgm_ops (siglen='64'));
 
 CREATE UNIQUE INDEX IF NOT EXISTS pessoas_apelido_index ON public.pessoas USING btree (apelido);

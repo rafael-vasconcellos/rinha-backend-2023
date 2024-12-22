@@ -22,3 +22,9 @@ Content-Type: application/json
   "apelido": 01,
   "nascimento": "2000-01-01"
 }
+
+###
+GET http://localhost:9999/pessoas HTTP/1.1
+
+###
+GET http://localhost:9999/pessoas?q=Polo HTTP/1.1

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 
+import java.sql.SQLTransientConnectionException;
+
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.example.rinha.Pessoa.Exceptions.*;
@@ -42,6 +44,13 @@ public class GlobalExceptionHandlers {
         return ResponseEntity.unprocessableEntity().build();
     }
 
+    @ExceptionHandler(SQLTransientConnectionException.class)
+    public ResponseEntity<?> handleConnectionTimeoutException(SQLTransientConnectionException e) {
+        return ResponseEntity
+            .status(529)
+            .build();
+    }
+    
     @ExceptionHandler(InternalServerError.class)
     public ResponseEntity<?> handleInternalServerError(InternalServerError e) { 
         System.out.println(RED + "\n\n\n\n\n" + "ERROR: " + e.getMessage() + "\n\n\n\n\n" + RESET);
